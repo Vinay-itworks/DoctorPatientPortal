@@ -1,4 +1,5 @@
-<%= form_with(model: appointment) do |form| %>
+<%= javascript_include_tag "appointment_form_validation" %>
+<%= form_with(model: appointment, id: "new_appointment") do |form| %>
   <% if appointment.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(appointment.errors.count, "error") %> prohibited this appointment from being saved:</h2>
@@ -10,15 +11,26 @@
       </ul>
     </div>
   <% end %>
-
+  <% 
+    @doctors = Doctor.all.pluck(:first_name, :last_name, :qualification, :id)
+    @doctors.map! { |field|
+      [ "#{field[0]} #{field[1]} (#{field[2]})", field[3]]
+    }
+  %>
   <div>
     <%= form.label :doctor_id, style: "display: block" %>
-    <%= form.text_field :doctor_id %>
+    <%= form.select :doctor_id, @doctors, {}, class: "js-example-basic-single" %> <%= link_to "New doctor", new_doctor_path %>
   </div>
 
+  <% 
+    @patients = Patient.all.pluck(:first_name, :last_name, :age, :id)
+    @patients.map! { |field|
+      [ "#{field[0]} #{field[1]} (#{field[2]})", field[3]]
+    }
+  %>
   <div>
     <%= form.label :patient_id, style: "display: block" %>
-    <%= form.text_field :patient_id %>
+    <%= form.select :patient_id, @patients, {}, class: "js-example-basic-single" %> <%= link_to "New patient", new_patient_path %>
   </div>
 
   <div>
@@ -28,9 +40,9 @@
 
   <div>
     <%= form.label :status, style: "display: block" %>
-    <%= form.text_field :status %>
+    <%= form.select :status, [ "----","Pending", "Visited", "NoVisit" ] %>
   </div>
-
+  <br/>
   <div>
     <%= form.submit %>
   </div>

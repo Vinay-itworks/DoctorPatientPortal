@@ -1,4 +1,5 @@
-<%= form_with(model: patient) do |form| %>
+<%= javascript_include_tag "patient_form_validation" %>
+<%= form_with(model: patient, class: "new_patient") do |form| %>
   <% if patient.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(patient.errors.count, "error") %> prohibited this patient from being saved:</h2>
